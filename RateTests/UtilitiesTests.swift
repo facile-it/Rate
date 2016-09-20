@@ -4,16 +4,16 @@ import Foundation
 
 class UtilitiesTests: XCTestCase {
 	func testIgnoreInput() {
-		let willBeCalled = expectationWithDescription("willBeCalled")
+		let willBeCalled = expectation(description: "willBeCalled")
 
 		let shouldBeCalled: () -> () = {
 			willBeCalled.fulfill()
 		}
 
-		let willCall: Int -> () = ignoreInput(shouldBeCalled)
+		let willCall: (Int) -> () = ignoreInput(shouldBeCalled)
 
 		willCall(3)
 
-		waitForExpectationsWithTimeout(1, handler: nil)
+		waitForExpectations(timeout: 1, handler: nil)
 	}
 }

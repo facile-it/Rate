@@ -1,6 +1,6 @@
 import Foundation
 
-public class Rate {
+open class Rate {
 	let currentVersionKey = "currentVersion"
 	let usesNumberKey = "usesNumber"
 	let tappedRemindMeLaterKey = "tappedRemindMeLater"
@@ -20,8 +20,8 @@ public class Rate {
 		self.urlOpener = urlOpener
 	}
 
-	public func updateForRelease(appVersion: String, date: NSDate) {
-		if let currentVersion = dataSaver.getStringForKey(currentVersionKey) where currentVersion == appVersion {
+	open func updateForRelease(_ appVersion: String, date: Date) {
+		if let currentVersion = dataSaver.getStringForKey(currentVersionKey) , currentVersion == appVersion {
 			let currentUsesNumber = dataSaver.getIntForKey(usesNumberKey) ?? 0
 			dataSaver.saveInt(currentUsesNumber + 1, key: usesNumberKey)
 		} else {
@@ -37,7 +37,7 @@ public class Rate {
 		}
 	}
 
-	public func getRatingAlertControllerIfNeeded() -> UIAlertController? {
+	open func getRatingAlertControllerIfNeeded() -> UIAlertController? {
 		guard checkShouldRate() && appNotRated() else {
 			return nil
 		}
@@ -45,27 +45,27 @@ public class Rate {
 		let alertController = UIAlertController(
 			title: rateSetup.textsSetup.alertTitle,
 			message: rateSetup.textsSetup.alertMessage,
-			preferredStyle: .Alert)
+			preferredStyle: .alert)
 
 		alertController.addAction(UIAlertAction(
 			title: rateSetup.textsSetup.rateButtonTitle,
-			style: .Default,
+			style: .default,
 			handler: ignoreInput(voteNowOnAppStore)))
 
 		alertController.addAction( UIAlertAction(
 			title: rateSetup.textsSetup.remindButtonTitle,
-			style: .Default,
+			style: .default,
 			handler: ignoreInput(saveDateRemindMeLater)))
 
 		alertController.addAction(UIAlertAction(
 			title: rateSetup.textsSetup.ignoreButtonTitle,
-			style: .Default,
+			style: .default,
 			handler:ignoreInput(ignoreRating)))
 
 		return alertController
 	}
 
-	public func reset() {
+	open func reset() {
 		dataSaver.resetValueForKey(currentVersionKey)
 		dataSaver.resetValueForKey(usesNumberKey)
 		dataSaver.resetValueForKey(tappedRemindMeLaterKey)
@@ -80,7 +80,7 @@ public class Rate {
 		setRated(true)
 	}
 
-	func setRated(value: Bool) {
+	func setRated(_ value: Bool) {
 		self.dataSaver.saveBool(value, key: self.ratedKey)
 	}
 
@@ -100,7 +100,7 @@ public class Rate {
 		setRated(false)
 	}
 
-	func updateDateFirstBootIfNeeded(date: NSDate) {
+	func updateDateFirstBootIfNeeded(_ date: Date) {
 		let noDate = dataSaver.getDateForKey(dateFirstBootKey) == nil
 		let rateNewVersions = rateSetup.timeSetup.rateNewVersionsIndipendently
 		guard noDate || rateNewVersions else { return }
@@ -112,12 +112,12 @@ public class Rate {
 	}
 
 	func saveDateRemindMeLater() {
-		dataSaver.saveDate(NSDate(), key: dateRemindMeLaterKey)
+		dataSaver.saveDate(Date(), key: dateRemindMeLaterKey)
 		dataSaver.saveBool(true, key: tappedRemindMeLaterKey)
 	}
 
 	func voteNowOnAppStore() {
-		guard let url = NSURL(string: rateSetup.appStoreUrlString) else { return }
+		guard let url = URL(string: rateSetup.appStoreUrlString) else { return }
 		setRated(true)
 		urlOpener.openURL(url)
 	}

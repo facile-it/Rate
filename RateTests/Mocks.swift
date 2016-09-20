@@ -1,9 +1,9 @@
 import Foundation
 @testable import Rate
 
-func after(value: Double, callback: () -> ()) {
-	let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(value * Double(NSEC_PER_SEC)))
-	dispatch_after(delayTime, dispatch_get_main_queue(),callback)
+func after(_ value: Double, callback: @escaping () -> ()) {
+	let delayTime = DispatchTime.now() + Double(Int64(value * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+	DispatchQueue.main.asyncAfter(deadline: delayTime,execute: callback)
 }
 
 class MockRateSetup: RateSetupType {
@@ -21,8 +21,8 @@ class MockRateSetup: RateSetupType {
 }
 
 class UrlOpenerMock: URLOpenerType {
-	var lastOpenedURL: NSURL?
-	func openURL(url: NSURL) -> Bool {
+	var lastOpenedURL: URL?
+	func openURL(_ url: URL) -> Bool {
 		lastOpenedURL = url
 		return true
 	}
@@ -31,39 +31,39 @@ class UrlOpenerMock: URLOpenerType {
 class DataSaverMock: DataSaverType {
     var dict: [String:AnyObject] = [:]
     
-    func resetValueForKey(key: String) {
+    func resetValueForKey(_ key: String) {
         dict[key] = nil
     }
     
-    func saveInt(value: Int, key: String) {
-        dict[key] = value
+    func saveInt(_ value: Int, key: String) {
+        dict[key] = value as AnyObject?
     }
     
-    func saveBool(value: Bool, key: String) {
-        dict[key] = value
+    func saveBool(_ value: Bool, key: String) {
+        dict[key] = value as AnyObject?
     }
 
-    func saveDate(date: NSDate, key: String) {
-        dict[key] = date
+    func saveDate(_ date: Date, key: String) {
+        dict[key] = date as AnyObject?
     }
 
-    func saveString(string: String, key: String) {
-        dict[key] = string
+    func saveString(_ string: String, key: String) {
+        dict[key] = string as AnyObject?
     }
 
-    func getIntForKey(key: String) -> Int? {
+    func getIntForKey(_ key: String) -> Int? {
         return dict[key] as? Int
     }
     
-    func getBoolForKey(key: String) -> Bool? {
+    func getBoolForKey(_ key: String) -> Bool? {
         return dict[key] as? Bool
     }
 
-    func getDateForKey(key: String) -> NSDate? {
-        return dict[key] as? NSDate
+    func getDateForKey(_ key: String) -> Date? {
+        return dict[key] as? Date
     }
 
-    func getStringForKey(key: String) -> String? {
+    func getStringForKey(_ key: String) -> String? {
         return dict [key] as? String
     }
 }

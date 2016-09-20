@@ -31,7 +31,7 @@ class RateTests: XCTestCase {
 		                dataSaver: dataSaverMock,
 		                urlOpener: urlOpenerMock)
 
-		rate.updateForRelease("", date: NSDate())
+		rate.updateForRelease("", date: Date())
 
 		XCTAssertEqual(dataSaverMock.getIntForKey(rate.usesNumberKey), 1)
 	}
@@ -48,7 +48,7 @@ class RateTests: XCTestCase {
 		                dataSaver: dataSaverMock,
 		                urlOpener: urlOpenerMock)
 
-		let expectedDate = NSDate()
+		let expectedDate = Date()
 		rate.updateForRelease("", date: expectedDate)
 
 		XCTAssertEqual(dataSaverMock.getDateForKey(rate.dateFirstBootKey), expectedDate)
@@ -82,18 +82,18 @@ class RateTests: XCTestCase {
 		                dataSaver: dataSaverMock,
 		                urlOpener: urlOpenerMock)
 
-		rate.updateForRelease("", date: NSDate())
+		rate.updateForRelease("", date: Date())
 
 		XCTAssertEqual(dataSaverMock.getIntForKey(rate.usesNumberKey), 1)
-		rate.updateForRelease("", date: NSDate())
-		rate.updateForRelease("", date: NSDate())
-		rate.updateForRelease("", date: NSDate())
-		rate.updateForRelease("", date: NSDate())
+		rate.updateForRelease("", date: Date())
+		rate.updateForRelease("", date: Date())
+		rate.updateForRelease("", date: Date())
+		rate.updateForRelease("", date: Date())
 		XCTAssertEqual(dataSaverMock.getIntForKey(rate.usesNumberKey), 5)
 	}
 
 	func testSaveDateFirstBoot() {
-		let expectedDate = NSDate()
+		let expectedDate = Date()
 
 		let rateSetupMock = MockRateSetup(
 			urlString: "",
@@ -142,16 +142,16 @@ class RateTests: XCTestCase {
 		                dataSaver: dataSaverMock,
 		                urlOpener: urlOpenerMock)
 		XCTAssertEqual(rate.shouldRateForPassedDaysSinceStart(), false)
-		dataSaverMock.saveDate(NSDate(), key: rate.dateFirstBootKey)
+		dataSaverMock.saveDate(Date(), key: rate.dateFirstBootKey)
 
-		let willPassTime = expectationWithDescription("willPassTime")
+		let willPassTime = expectation(description: "willPassTime")
 
 		after(0.1) {
 			XCTAssertEqual(rate.shouldRateForPassedDaysSinceStart(), true)
 			willPassTime.fulfill()
 		}
 
-		waitForExpectationsWithTimeout(1, handler: nil)
+		waitForExpectations(timeout: 1, handler: nil)
 	}
 
 	func testShouldRateForNumberOfUses() {
@@ -187,7 +187,7 @@ class RateTests: XCTestCase {
 		                urlOpener: urlOpenerMock)
 
 		XCTAssertEqual(rate.shouldRateForPassedDaysSinceRemindMeLater(), false)
-		dataSaverMock.saveDate(NSDate(), key: rate.dateRemindMeLaterKey)
+		dataSaverMock.saveDate(Date(), key: rate.dateRemindMeLaterKey)
 		XCTAssertEqual(rate.shouldRateForPassedDaysSinceRemindMeLater(), true)
 	}
 
@@ -311,7 +311,7 @@ class RateTests: XCTestCase {
 
 		XCTAssertNotNil(rate.getRatingAlertControllerIfNeeded())
 
-		let willCheck = expectationWithDescription("willCheck")
+		let willCheck = expectation(description: "willCheck")
 
 		after(0.1) {
 			dataSaverMock.saveBool(true, key: rate.ratedKey)
@@ -322,7 +322,7 @@ class RateTests: XCTestCase {
 			}
 		}
 
-		waitForExpectationsWithTimeout(1, handler: nil)
+		waitForExpectations(timeout: 1, handler: nil)
 	}
 
 	func testCheckShouldRate() {
@@ -351,10 +351,10 @@ class RateTests: XCTestCase {
 		                urlOpener: urlOpenerMock)
 
 		dataSaverMock.saveBool(false, key: rate.tappedRemindMeLaterKey)
-		dataSaverMock.saveDate(NSDate(), key: rate.dateFirstBootKey)
+		dataSaverMock.saveDate(Date(), key: rate.dateFirstBootKey)
 		XCTAssertEqual(rate.checkShouldRate(), true)
 		dataSaverMock.saveBool(true, key: rate.tappedRemindMeLaterKey)
-		dataSaverMock.saveDate(NSDate(), key: rate.dateRemindMeLaterKey)
+		dataSaverMock.saveDate(Date(), key: rate.dateRemindMeLaterKey)
 		XCTAssertEqual(rate.checkShouldRate(), true)
 	}
 
@@ -388,13 +388,13 @@ class RateTests: XCTestCase {
 		XCTAssertNotNil(alertController)
 		XCTAssertEqual(alertController?.title, "alert")
 		XCTAssertEqual(alertController?.message, "vuoi votare?")
-		XCTAssertEqual(alertController?.preferredStyle, .Alert)
+		XCTAssertEqual(alertController?.preferredStyle, .alert)
 		XCTAssertEqual(alertController?.actions[0].title, "vota")
-		XCTAssertEqual(alertController?.actions[0].style, .Default)
+		XCTAssertEqual(alertController?.actions[0].style, .default)
 		XCTAssertEqual(alertController?.actions[1].title, "non ora")
-		XCTAssertEqual(alertController?.actions[1].style, .Default)
+		XCTAssertEqual(alertController?.actions[1].style, .default)
 		XCTAssertEqual(alertController?.actions[2].title, "ignora")
-		XCTAssertEqual(alertController?.actions[2].style, .Default)
+		XCTAssertEqual(alertController?.actions[2].style, .default)
 	}
 
 	func testGetRatingAlertControllerIfNeeded_NotPassed() {
@@ -414,7 +414,7 @@ class RateTests: XCTestCase {
 	}
 
 	func testVoteNowOnAppStore() {
-		let urlCompare = NSURL(string: "http://www.facile.it")
+		let urlCompare = URL(string: "http://www.facile.it")
 		let rateSetupMock = MockRateSetup(
 			urlString: "http://www.facile.it",
 			timeSetup: ratingTimeSetup,
@@ -448,12 +448,12 @@ class RateTests: XCTestCase {
 		                dataSaver: dataSaverMock,
 		                urlOpener: urlOpenerMock)
 		dataSaverMock.saveString("2.2.2", key: "currentVersion")
-		rate.updateForRelease("2.2.2", date: NSDate())
+		rate.updateForRelease("2.2.2", date: Date())
 		XCTAssertEqual(dataSaverMock.getIntForKey(rate.usesNumberKey), 1)
 		dataSaverMock.saveString("1.1.1", key: "currentVersion")
-		rate.updateForRelease("1.2.1", date: NSDate())
+		rate.updateForRelease("1.2.1", date: Date())
 		dataSaverMock.saveString("1.1.2", key: "currentVersion")
-		rate.updateForRelease("1.1.4", date: NSDate())
+		rate.updateForRelease("1.1.4", date: Date())
 		XCTAssertEqual(dataSaverMock.getBoolForKey(rate.tappedRemindMeLaterKey), false)
 	}
 
@@ -468,9 +468,9 @@ class RateTests: XCTestCase {
 		let rate = Rate(rateSetup: rateSetupMock,
 		                dataSaver: dataSaverMock,
 		                urlOpener: urlOpenerMock)
-		let date = NSDate()
+		let date = Date()
 		dataSaverMock.saveDate(date, key: rate.dateFirstBootKey)
-		let newDate = NSDate()
+		let newDate = Date()
 		rate.updateDateFirstBootIfNeeded(newDate)
 		XCTAssertNotEqual(dataSaverMock.getDateForKey(rate.dateFirstBootKey), newDate)
 	}
@@ -487,7 +487,7 @@ class RateTests: XCTestCase {
 		                dataSaver: dataSaverMock,
 		                urlOpener: urlOpenerMock)
 
-		let expectedDate = NSDate()
+		let expectedDate = Date()
 
 		dataSaverMock.saveString("12345", key: rate.currentVersionKey)
 		dataSaverMock.saveInt(3, key: rate.usesNumberKey)
@@ -526,7 +526,7 @@ class RateTests: XCTestCase {
 		                dataSaver: dataSaverMock,
 		                urlOpener: urlOpenerMock)
 
-		rate.updateForRelease("", date: NSDate())
+		rate.updateForRelease("", date: Date())
 		XCTAssertNil(rate.getRatingAlertControllerIfNeeded())
 	}
 
@@ -548,7 +548,7 @@ class RateTests: XCTestCase {
 		                dataSaver: dataSaverMock,
 		                urlOpener: urlOpenerMock)
 
-		rate.updateForRelease("", date: NSDate())
+		rate.updateForRelease("", date: Date())
 		XCTAssertNotNil(rate.getRatingAlertControllerIfNeeded())
 	}
 
@@ -570,7 +570,7 @@ class RateTests: XCTestCase {
 		                dataSaver: dataSaverMock,
 		                urlOpener: urlOpenerMock)
 
-		rate.updateForRelease("", date: NSDate())
+		rate.updateForRelease("", date: Date())
 		XCTAssertNil(rate.getRatingAlertControllerIfNeeded())
 	}
 
@@ -592,7 +592,7 @@ class RateTests: XCTestCase {
 		                dataSaver: dataSaverMock,
 		                urlOpener: urlOpenerMock)
 
-		rate.updateForRelease("", date: NSDate())
+		rate.updateForRelease("", date: Date())
 		XCTAssertNotNil(rate.getRatingAlertControllerIfNeeded())
 	}
 
@@ -614,10 +614,10 @@ class RateTests: XCTestCase {
 		                dataSaver: dataSaverMock,
 		                urlOpener: urlOpenerMock)
 
-		rate.updateForRelease("", date: NSDate())
+		rate.updateForRelease("", date: Date())
 		XCTAssertNotNil(rate.getRatingAlertControllerIfNeeded())
 
-		let willCheck = expectationWithDescription("willCheck")
+		let willCheck = expectation(description: "willCheck")
 		after(0.1) {
 			rate.saveDateRemindMeLater()
 
@@ -627,7 +627,7 @@ class RateTests: XCTestCase {
 			}
 		}
 
-		waitForExpectationsWithTimeout(1, handler: nil)
+		waitForExpectations(timeout: 1, handler: nil)
 	}
 
 	func testDaysUntilremindMeLaterRateTrue() {
@@ -648,10 +648,10 @@ class RateTests: XCTestCase {
 		                dataSaver: dataSaverMock,
 		                urlOpener: urlOpenerMock)
 
-		rate.updateForRelease("", date: NSDate())
+		rate.updateForRelease("", date: Date())
 		XCTAssertNotNil(rate.getRatingAlertControllerIfNeeded())
 
-		let willCheck = expectationWithDescription("willCheck")
+		let willCheck = expectation(description: "willCheck")
 		after(0.1) {
 			rate.saveDateRemindMeLater()
 
@@ -661,7 +661,7 @@ class RateTests: XCTestCase {
 			}
 		}
 
-		waitForExpectationsWithTimeout(1, handler: nil)
+		waitForExpectations(timeout: 1, handler: nil)
 	}
 
 	func testUsesRateTrue() {
@@ -682,33 +682,33 @@ class RateTests: XCTestCase {
 		                dataSaver: dataSaverMock,
 		                urlOpener: urlOpenerMock)
 
-		rate.updateForRelease("", date: NSDate())
+		rate.updateForRelease("", date: Date())
 		XCTAssertNil(rate.getRatingAlertControllerIfNeeded())
 
-		let willCheck = expectationWithDescription("willCheck")
+		let willCheck = expectation(description: "willCheck")
 		after(0.1) {
-			rate.updateForRelease("", date: NSDate())
-			rate.updateForRelease("", date: NSDate())
-			rate.updateForRelease("", date: NSDate())
-			rate.updateForRelease("", date: NSDate())
+			rate.updateForRelease("", date: Date())
+			rate.updateForRelease("", date: Date())
+			rate.updateForRelease("", date: Date())
+			rate.updateForRelease("", date: Date())
 
 			after(0.1) {
 				XCTAssertNil(rate.getRatingAlertControllerIfNeeded())
 
 				after(0.1) {
-					rate.updateForRelease("", date: NSDate())
-					rate.updateForRelease("", date: NSDate())
-					rate.updateForRelease("", date: NSDate())
-					rate.updateForRelease("", date: NSDate())
+					rate.updateForRelease("", date: Date())
+					rate.updateForRelease("", date: Date())
+					rate.updateForRelease("", date: Date())
+					rate.updateForRelease("", date: Date())
 
 					after(0.1) {
 						XCTAssertNil(rate.getRatingAlertControllerIfNeeded())
 
 						after(0.1) {
-							rate.updateForRelease("", date: NSDate())
-							rate.updateForRelease("", date: NSDate())
-							rate.updateForRelease("", date: NSDate())
-							rate.updateForRelease("", date: NSDate())
+							rate.updateForRelease("", date: Date())
+							rate.updateForRelease("", date: Date())
+							rate.updateForRelease("", date: Date())
+							rate.updateForRelease("", date: Date())
 
 							after(0.1) {
 								XCTAssertNotNil(rate.getRatingAlertControllerIfNeeded())
@@ -720,7 +720,7 @@ class RateTests: XCTestCase {
 			}
 		}
 
-		waitForExpectationsWithTimeout(10, handler: nil)
+		waitForExpectations(timeout: 10, handler: nil)
 	}
 
 	func testRemindRateTrue() {
@@ -741,10 +741,10 @@ class RateTests: XCTestCase {
 		                dataSaver: dataSaverMock,
 		                urlOpener: urlOpenerMock)
 
-		rate.updateForRelease("", date: NSDate())
+		rate.updateForRelease("", date: Date())
 		XCTAssertNil(rate.getRatingAlertControllerIfNeeded())
 
-		let willCheck = expectationWithDescription("willCheck")
+		let willCheck = expectation(description: "willCheck")
 		after(0.1) {
 			rate.saveDateRemindMeLater()
 
@@ -754,7 +754,7 @@ class RateTests: XCTestCase {
 			}
 		}
 
-		waitForExpectationsWithTimeout(1, handler: nil)
+		waitForExpectations(timeout: 1, handler: nil)
 	}
 
 	func testNumberOfUsesAndVoteNowRateFalse() {
@@ -775,10 +775,10 @@ class RateTests: XCTestCase {
 		                dataSaver: dataSaverMock,
 		                urlOpener: urlOpenerMock)
 
-		rate.updateForRelease("", date: NSDate())
+		rate.updateForRelease("", date: Date())
 		XCTAssertNotNil(rate.getRatingAlertControllerIfNeeded())
 
-		let willCheck = expectationWithDescription("willCheck")
+		let willCheck = expectation(description: "willCheck")
 
 		after(0.1) {
 			rate.voteNowOnAppStore()
@@ -793,7 +793,7 @@ class RateTests: XCTestCase {
 			}
 		}
 
-		waitForExpectationsWithTimeout(1, handler: nil)
+		waitForExpectations(timeout: 1, handler: nil)
 	}
 
 	func testNumberOfUsesAndIgnoredRateFalse() {
@@ -814,10 +814,10 @@ class RateTests: XCTestCase {
 		                dataSaver: dataSaverMock,
 		                urlOpener: urlOpenerMock)
 
-		rate.updateForRelease("", date: NSDate())
+		rate.updateForRelease("", date: Date())
 		XCTAssertNotNil(rate.getRatingAlertControllerIfNeeded())
 
-		let willCheck = expectationWithDescription("willCheck")
+		let willCheck = expectation(description: "willCheck")
 
 		after(0.1) {
 			rate.ignoreRating()
@@ -832,7 +832,7 @@ class RateTests: XCTestCase {
 			}
 		}
 
-		waitForExpectationsWithTimeout(1, handler: nil)
+		waitForExpectations(timeout: 1, handler: nil)
 	}
 
 	func testVoteNowAndVersionUpdatedAndIndipendentlyRateTrue() {
@@ -853,10 +853,10 @@ class RateTests: XCTestCase {
 		                dataSaver: dataSaverMock,
 		                urlOpener: urlOpenerMock)
 
-		rate.updateForRelease("1", date: NSDate())
+		rate.updateForRelease("1", date: Date())
 		XCTAssertNotNil(rate.getRatingAlertControllerIfNeeded())
 
-		let willCheck = expectationWithDescription("willCheck")
+		let willCheck = expectation(description: "willCheck")
 
 		after(0.1) {
 			rate.voteNowOnAppStore()
@@ -865,7 +865,7 @@ class RateTests: XCTestCase {
 				XCTAssertNil(rate.getRatingAlertControllerIfNeeded())
 
 				after(0.1) {
-					rate.updateForRelease("2", date: NSDate())
+					rate.updateForRelease("2", date: Date())
 
 					after(0.1) {
 						XCTAssertNotNil(rate.getRatingAlertControllerIfNeeded())
@@ -875,7 +875,7 @@ class RateTests: XCTestCase {
 			}
 		}
 
-		waitForExpectationsWithTimeout(1, handler: nil)
+		waitForExpectations(timeout: 1, handler: nil)
 	}
 
 	func testIgnoredAndVersionUpdatedAndIndipendentlyRateTrue() {
@@ -896,10 +896,10 @@ class RateTests: XCTestCase {
 		                dataSaver: dataSaverMock,
 		                urlOpener: urlOpenerMock)
 
-		rate.updateForRelease("1", date: NSDate())
+		rate.updateForRelease("1", date: Date())
 		XCTAssertNotNil(rate.getRatingAlertControllerIfNeeded())
 
-		let willCheck = expectationWithDescription("willCheck")
+		let willCheck = expectation(description: "willCheck")
 
 		after(0.1) {
 			rate.ignoreRating()
@@ -908,7 +908,7 @@ class RateTests: XCTestCase {
 				XCTAssertNil(rate.getRatingAlertControllerIfNeeded())
 
 				after(0.1) {
-					rate.updateForRelease("2", date: NSDate())
+					rate.updateForRelease("2", date: Date())
 
 					after(0.1) {
 						XCTAssertNotNil(rate.getRatingAlertControllerIfNeeded())
@@ -918,7 +918,7 @@ class RateTests: XCTestCase {
 			}
 		}
 
-		waitForExpectationsWithTimeout(1, handler: nil)
+		waitForExpectations(timeout: 1, handler: nil)
 	}
 
 	func testVoteNowAndVersionUpdatedAndIndipendentlyRateFalse() {
@@ -939,10 +939,10 @@ class RateTests: XCTestCase {
 		                dataSaver: dataSaverMock,
 		                urlOpener: urlOpenerMock)
 
-		rate.updateForRelease("1", date: NSDate())
+		rate.updateForRelease("1", date: Date())
 		XCTAssertNotNil(rate.getRatingAlertControllerIfNeeded())
 
-		let willCheck = expectationWithDescription("willCheck")
+		let willCheck = expectation(description: "willCheck")
 
 		after(0.1) {
 			rate.voteNowOnAppStore()
@@ -951,7 +951,7 @@ class RateTests: XCTestCase {
 				XCTAssertNil(rate.getRatingAlertControllerIfNeeded())
 
 				after(0.1) {
-					rate.updateForRelease("2", date: NSDate())
+					rate.updateForRelease("2", date: Date())
 
 					after(0.1) {
 						XCTAssertNil(rate.getRatingAlertControllerIfNeeded())
@@ -961,7 +961,7 @@ class RateTests: XCTestCase {
 			}
 		}
 
-		waitForExpectationsWithTimeout(1, handler: nil)
+		waitForExpectations(timeout: 1, handler: nil)
 	}
 
 	func testIgnoredAndVersionUpdatedAndIndipendentlyRateFalse() {
@@ -982,10 +982,10 @@ class RateTests: XCTestCase {
 		                dataSaver: dataSaverMock,
 		                urlOpener: urlOpenerMock)
 
-		rate.updateForRelease("1", date: NSDate())
+		rate.updateForRelease("1", date: Date())
 		XCTAssertNotNil(rate.getRatingAlertControllerIfNeeded())
 
-		let willCheck = expectationWithDescription("willCheck")
+		let willCheck = expectation(description: "willCheck")
 
 		after(0.1) {
 			rate.ignoreRating()
@@ -994,7 +994,7 @@ class RateTests: XCTestCase {
 				XCTAssertNil(rate.getRatingAlertControllerIfNeeded())
 
 				after(0.1) {
-					rate.updateForRelease("2", date: NSDate())
+					rate.updateForRelease("2", date: Date())
 
 					after(0.1) {
 						XCTAssertNil(rate.getRatingAlertControllerIfNeeded())
@@ -1004,7 +1004,7 @@ class RateTests: XCTestCase {
 			}
 		}
 
-		waitForExpectationsWithTimeout(1, handler: nil)
+		waitForExpectations(timeout: 1, handler: nil)
 	}
 
 	func testRemindAndVersionUpdatedAndIndipendentlyRateFalse() {
@@ -1025,16 +1025,16 @@ class RateTests: XCTestCase {
 		                dataSaver: dataSaverMock,
 		                urlOpener: urlOpenerMock)
 
-		rate.updateForRelease("1", date: NSDate())
+		rate.updateForRelease("1", date: Date())
 		XCTAssertNil(rate.getRatingAlertControllerIfNeeded())
 
-		let willCheck = expectationWithDescription("willCheck")
+		let willCheck = expectation(description: "willCheck")
 
 		after(0.1) {
 			rate.saveDateRemindMeLater()
 
 			after(0.1) {
-				rate.updateForRelease("2", date: NSDate())
+				rate.updateForRelease("2", date: Date())
 
 				after(0.1) {
 					XCTAssertNil(rate.getRatingAlertControllerIfNeeded())
@@ -1043,7 +1043,7 @@ class RateTests: XCTestCase {
 			}
 		}
 
-		waitForExpectationsWithTimeout(1, handler: nil)
+		waitForExpectations(timeout: 1, handler: nil)
 	}
 
 	func testRemindAndVersionUpdatedAndNotIndipendentlyRateTrue() {
@@ -1064,16 +1064,16 @@ class RateTests: XCTestCase {
 		                dataSaver: dataSaverMock,
 		                urlOpener: urlOpenerMock)
 
-		rate.updateForRelease("1", date: NSDate())
+		rate.updateForRelease("1", date: Date())
 		XCTAssertNil(rate.getRatingAlertControllerIfNeeded())
 
-		let willCheck = expectationWithDescription("willCheck")
+		let willCheck = expectation(description: "willCheck")
 
 		after(0.1) {
 			rate.saveDateRemindMeLater()
 
 			after(0.1) {
-				rate.updateForRelease("2", date: NSDate())
+				rate.updateForRelease("2", date: Date())
 
 				after(0.1) {
 					XCTAssertNotNil(rate.getRatingAlertControllerIfNeeded())
@@ -1082,6 +1082,6 @@ class RateTests: XCTestCase {
 			}
 		}
 
-		waitForExpectationsWithTimeout(1, handler: nil)
+		waitForExpectations(timeout: 1, handler: nil)
 	}
 }

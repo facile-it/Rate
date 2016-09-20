@@ -7,19 +7,19 @@ public protocol RateSetupType {
 }
 
 public protocol DataSaverType {
-    func saveInt(value: Int, key: String)
-    func saveBool(value: Bool, key: String)
-    func saveDate(date: NSDate, key: String)
-    func saveString(string: String, key: String)
+    func saveInt(_ value: Int, key: String)
+    func saveBool(_ value: Bool, key: String)
+    func saveDate(_ date: Date, key: String)
+    func saveString(_ string: String, key: String)
 
-    func getIntForKey(key: String) -> Int?
-    func getBoolForKey(key: String) -> Bool?
-    func getDateForKey(key: String) -> NSDate?
-    func getStringForKey(key: String) -> String?
+    func getIntForKey(_ key: String) -> Int?
+    func getBoolForKey(_ key: String) -> Bool?
+    func getDateForKey(_ key: String) -> Date?
+    func getStringForKey(_ key: String) -> String?
 
-	func resetValueForKey(key: String)
+	func resetValueForKey(_ key: String)
 }
 
 public protocol URLOpenerType {
-	func openURL(url: NSURL) -> Bool
+	@discardableResult func openURL(_ url: URL) -> Bool
 }
