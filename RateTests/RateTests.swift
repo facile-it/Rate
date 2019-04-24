@@ -763,9 +763,9 @@ class RateTests: XCTestCase {
 			usesUntilPrompt: 1,
 			remindPeriod: 10,
 			rateNewVersionIndipendently: false)
-
+        
 		let rateSetupMock = MockRateSetup(
-			urlString: "",
+			urlString: URL.test().absoluteString,
 			timeSetup: ratingTimeSetup,
 			textSetup: ratingTextSetup)
 
@@ -779,7 +779,7 @@ class RateTests: XCTestCase {
 		XCTAssertNotNil(rate.getRatingAlertControllerIfNeeded())
 
 		let willCheck = expectation(description: "willCheck")
-
+        
 		after(0.1) {
 			rate.voteNowOnAppStore()
 
@@ -843,7 +843,7 @@ class RateTests: XCTestCase {
 			rateNewVersionIndipendently: true)
 
 		let rateSetupMock = MockRateSetup(
-			urlString: "",
+			urlString: URL.test().absoluteString,
 			timeSetup: ratingTimeSetup,
 			textSetup: ratingTextSetup)
 
@@ -929,7 +929,7 @@ class RateTests: XCTestCase {
 			rateNewVersionIndipendently: false)
 
 		let rateSetupMock = MockRateSetup(
-			urlString: "",
+			urlString: URL.test().absoluteString,
 			timeSetup: ratingTimeSetup,
 			textSetup: ratingTextSetup)
 
