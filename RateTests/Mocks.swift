@@ -67,3 +67,9 @@ class DataSaverMock: DataSaverType {
         return dict [key] as? String
     }
 }
+
+extension URL {
+    static func test() -> URL {
+        return URL.init(string: "https://www.facile.it")!
+    }
+}
